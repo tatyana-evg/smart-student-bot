@@ -1,42 +1,34 @@
-"""
-Telegram-бот «Умный Школьник» — интерактивный репетитор для учеников 2-11 классов.
-Запуск: python bot.py
-"""
+import os
 
-import asyncio
-import logging
-from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
+BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+AI_PROVIDER = os.getenv("AI_PROVIDER", "openai")
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+asyncpg://postgres:password@localhost:5432/smart_student"
+)
 
-from config import BOT_TOKEN
-from database.db import init_db
-from handlers import start, student, parent, tasks, profile
+REWARD_THRESHOLDS = {
+    500: {"title": "📚 Книга в ЛитРес", "description": "Промокод на бесплатную книгу!", "promo": "LITRES-SMART-500"},
+    1000: {"title": "🎓 Курс на Stepik", "description": "Скидка 20% на курс!", "promo": "STEPIK-SMART-1000"},
+    2500: {"title": "🎨 Нейросеть-художник", "description": "Доступ к генерации арта!", "promo": "ART-SMART-2500"},
+}
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+RANKS = [
+    (0, "🌱 Новичок"),
+    (101, "📖 Знаток"),
+    (501, "🧠 Эрудит"),
+    (1001, "🎓 Профессор"),
+]
 
+SUBJECTS_BY_GRADE = {
+    "2-4": ["📐 Математика", "📝 Русский язык", "🌍 Окружающий мир", "📖 Чтение"],
+    "5-8": ["📐 Математика", "📝 Русский язык", "🇬🇧 Английский язык", "⚗️ Физика", "🔬 Биология", "📜 История", "🌐 География"],
+    "9-11": ["📐 Математика", "📝 Русский язык", "🇬🇧 Английский язык", "⚗️ Физика", "🧪 Химия", "💻 Информатика", "📜 История", "🔬 Биология", "🌐 География"],
+}
 
-async def main():
-    await init_db()
-
-    bot = Bot(
-        token=BOT_TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
-    dp = Dispatcher(storage=MemoryStorage())
-
-    # Регистрация роутеров
-    dp.include_router(start.router)
-    dp.include_router(student.router)
-    dp.include_router(parent.router)
-    dp.include_router(tasks.router)
-    dp.include_router(profile.router)
-
-    logger.info("Бот «Умный Школьник» запущен!")
-    await dp.start_polling(bot, skip_updates=True)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+DIFFICULTY_LABELS = {
+    "easy": "😊 Лёгкий",
+    "medium": "🔥 Средний",
+    "hard": "⭐ Сложный (со звёздочкой)",
+}
