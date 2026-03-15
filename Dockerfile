@@ -1,32 +1,13 @@
-version: '3.9'
+FROM python:3.12-slim
 
-services:
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: smart_student
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+WORKDIR /app
 
-  bot:
-    build: .
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      BOT_TOKEN: ${BOT_TOKEN}
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      DATABASE_URL: postgresql+asyncpg://postgres:password@postgres:5432/smart_student
-    env_file:
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["python", "bot.py"]
       - .env
     restart: unless-stopped
 
