@@ -1,0 +1,65 @@
+"""
+Конфигурация бота. Все чувствительные данные — через переменные окружения.
+"""
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Telegram Bot Token (получить у @BotFather)
+BOT_TOKEN = os.getenv("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
+
+# OpenAI или YandexGPT
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+YANDEX_GPT_KEY = os.getenv("YANDEX_GPT_KEY", "")
+AI_PROVIDER = os.getenv("AI_PROVIDER", "openai")  # "openai" или "yandex"
+
+# База данных PostgreSQL
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+asyncpg://postgres:password@localhost:5432/smart_student"
+)
+
+# Пороговые значения для наград
+REWARD_THRESHOLDS = {
+    500: {
+        "title": "📚 Книга в ЛитРес",
+        "description": "Промокод на бесплатную книгу в сервисе ЛитРес!",
+        "promo": "LITRES-SMART-500"
+    },
+    1000: {
+        "title": "🎓 Курс на Stepik",
+        "description": "Скидка 20% на образовательный курс на Stepik!",
+        "promo": "STEPIK-SMART-1000"
+    },
+    2500: {
+        "title": "🎨 Нейросеть-художник",
+        "description": "Доступ к генерации уникального арта для обоев телефона!",
+        "promo": "ART-SMART-2500"
+    },
+}
+
+# Ранги пользователей
+RANKS = [
+    (0, "🌱 Новичок"),
+    (101, "📖 Знаток"),
+    (501, "🧠 Эрудит"),
+    (1001, "🎓 Профессор"),
+]
+
+# Предметы по классам
+SUBJECTS_BY_GRADE = {
+    "2-4": ["📐 Математика", "📝 Русский язык", "🌍 Окружающий мир", "📖 Чтение"],
+    "5-8": ["📐 Математика", "📝 Русский язык", "🇬🇧 Английский язык",
+             "⚗️ Физика", "🔬 Биология", "📜 История", "🌐 География"],
+    "9-11": ["📐 Математика", "📝 Русский язык", "🇬🇧 Английский язык",
+              "⚗️ Физика", "🧪 Химия", "💻 Информатика", "📜 История",
+              "🔬 Биология", "🌐 География"],
+}
+
+# Уровни сложности
+DIFFICULTY_LABELS = {
+    "easy": "😊 Лёгкий",
+    "medium": "🔥 Средний",
+    "hard": "⭐ Сложный (со звёздочкой)",
+}

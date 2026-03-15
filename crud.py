@@ -1,0 +1,6 @@
+aiogram==3.7.0
+sqlalchemy[asyncio]==2.0.30
+asyncpg==0.29.0
+openai==1.30.0
+python-dotenv==1.0.1
+aiohttp==3.9.5
